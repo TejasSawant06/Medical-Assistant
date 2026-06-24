@@ -1,130 +1,219 @@
+🩺 MedAssist AI – RAG Medical Assistant
+
+An AI-powered Medical Assistant built using Retrieval-Augmented Generation (RAG) that enables users to upload medical documents and receive accurate, context-aware answers grounded in the uploaded content.
+
 🧠 Project Overview
-This application is a Medical Domain Chatbot built using Retrieval-Augmented Generation (RAG). It allows users to upload their own medical documents (e.g., textbooks, reports), and the system intelligently answers queries by retrieving the most relevant content before generating a final response.
+
+This application is a Medical Domain Chatbot built using Retrieval-Augmented Generation (RAG). Users can upload their own medical documents (textbooks, notes, research papers, reports, etc.), and the system intelligently retrieves the most relevant information before generating a response.
+
+Unlike traditional chatbots, responses are grounded in the uploaded knowledge base, significantly reducing hallucinations and improving factual accuracy.
 
 🎓 What is RAG?
-RAG (Retrieval-Augmented Generation) enhances language models by supplying relevant external context from a knowledge base, preventing hallucinations and improving accuracy, especially for factual or specialized domains like medicine.
+
+Retrieval-Augmented Generation (RAG) is an AI architecture that combines:
+
+Information Retrieval → Fetches relevant knowledge from external documents.
+Large Language Models (LLMs) → Generates natural language responses using the retrieved context.
+
+This approach improves:
+
+Accuracy
+Explainability
+Domain-specific reasoning
+Reduced hallucinations
+
+making it ideal for healthcare and medical applications.
 
 🔄 Architecture
-User Input
-   ↓
-Query Embedding → Pinecone Vector DB ← Embedded Chunks ← Chunking ← PDF Loader
-   ↓
-Retrieved Docs
-   ↓
-     RAG Chain (Groq + LangChain)
-   ↓
-LLM-generated Answer
-For a detailed view, refer to the MedicalAssistant.pdf
+                    User Query
+                         │
+                         ▼
+                Query Embedding
+                         │
+                         ▼
+                Pinecone Vector DB
+                         ▲
+                         │
+       Embedded Chunks ← Chunking ← PDF Loader
+                         │
+                         ▼
+                Retrieved Documents
+                         │
+                         ▼
+         LangChain RAG Pipeline + Groq LLM
+                         │
+                         ▼
+              Context-Aware Response
 
-📚 Features
-Upload medical PDFs (notes, books, etc.)
-Auto-extracts text and splits into semantic chunks
-Embeds using Google/BGE embeddings
-Stores vectors in Pinecone DB
-Uses Groq's LLaMA3-70B via LangChain
-FastAPI backend with endpoints for file upload and Q&A
-🌐 Tech Stack
-Component	Tech Used
-LLM	Groq API (LLaMA3-70B)
-Embeddings	Google Generative AI / BGE
-Vector DB	Pinecone
-Framework	LangChain
+For a detailed architecture diagram, refer to:
+
+📄 MedicalAssistant.pdf
+
+✨ Features
+📄 Upload one or multiple medical PDFs
+🔍 Semantic search over uploaded documents
+🧩 Automatic text extraction and chunking
+🧠 Context-aware question answering
+⚡ Fast response generation using Groq LLM
+📚 Retrieval-Augmented Generation (RAG)
+🌐 FastAPI REST APIs
+💬 Interactive Streamlit frontend
+☁️ Cloud deployment using Render
+🛠️ Tech Stack
+Component	Technology
+LLM	Groq API (LLaMA 3-70B)
+Embeddings	Google Generative AI Embeddings
+Vector Database	Pinecone
+RAG Framework	LangChain
 Backend	FastAPI
+Frontend	Streamlit
 Deployment	Render
+Language	Python
 📚 API Endpoints
-POST /upload_pdfs/ --- Upload one or more PDF files
+Upload PDFs
+POST /upload_pdfs/
 
-POST /ask/ --- Ask a question --- Form field: `question`
+Upload one or more PDF documents.
+
+Ask Questions
+POST /ask/
+Form Data
+{
+  "question": "What are the symptoms of diabetes?"
+}
+Response
+{
+  "answer": "The uploaded document states that..."
+}
 📁 Folder Structure
-└── 📁assets
-    ├── DIABETES.pdf
-    ├── MedicalAssistant.pdf
-    └── medicalAssistant.png
-└── 📁client
-    └── 📁__pycache__
-        ├── config.cpython-311.pyc
-    └── 📁components
-        └── 📁__pycache__
-            ├── chatUI.cpython-311.pyc
-            ├── history_download.cpython-311.pyc
-            ├── upload.cpython-311.pyc
-        ├── chatUI.py
-        ├── history_download.py
-        ├── upload.py
-    └── 📁utils
-        └── 📁__pycache__
-            ├── api.cpython-311.pyc
-        ├── api.py
-    ├── app.py
-    ├── config.py
-    └── requirements.txt
-└── 📁server
-    └── 📁__pycache__
-        ├── logger.cpython-311.pyc
-        ├── main.cpython-311.pyc
-        ├── test.cpython-311.pyc
-    └── 📁middlewares
-        └── 📁__pycache__
-            ├── exception_handlers.cpython-311.pyc
-        ├── exception_handlers.py
-    └── 📁modules
-        └── 📁__pycache__
-            ├── llm.cpython-311.pyc
-            ├── load_vectorstore.cpython-311.pyc
-            ├── query_handlers.cpython-311.pyc
-        ├── llm.py
-        ├── load_vectorstore.py
-        ├── pdf_handlers.py
-        ├── query_handlers.py
-    └── 📁routes
-        └── 📁__pycache__
-            ├── ask_question.cpython-311.pyc
-            ├── upload_pdfs.cpython-311.pyc
-        ├── ask_question.py
-        ├── upload_pdfs.py
-    └── 📁uploaded_docs
-        ├── DIABETES.pdf
-        ├── Supratim Nag - LOR.pdf
-    ├── .env
-    ├── logger.py
-    ├── main.py
-    ├── requirements.txt
-    └── test.py
+medicalAssistant/
+│
+├── assets/
+│   ├── DIABETES.pdf
+│   ├── MedicalAssistant.pdf
+│   └── medicalAssistant.png
+│
+├── client/
+│   ├── components/
+│   │   ├── chatUI.py
+│   │   ├── history_download.py
+│   │   └── upload.py
+│   │
+│   ├── utils/
+│   │   └── api.py
+│   │
+│   ├── app.py
+│   ├── config.py
+│   └── requirements.txt
+│
+├── server/
+│   ├── middlewares/
+│   │   └── exception_handlers.py
+│   │
+│   ├── modules/
+│   │   ├── llm.py
+│   │   ├── load_vectorstore.py
+│   │   ├── pdf_handlers.py
+│   │   └── query_handlers.py
+│   │
+│   ├── routes/
+│   │   ├── ask_question.py
+│   │   └── upload_pdfs.py
+│   │
+│   ├── uploaded_docs/
+│   │
+│   ├── logger.py
+│   ├── main.py
+│   ├── requirements.txt
+│   └── .env
+│
+└── README.md
 ⚡ Quick Setup
-# Clone the repo
-$ git clone https://github.com/snsupratim/medicalAssistant.git
-$ cd medicalAssistant/server
+1. Clone Repository
+git clone https://github.com/TejasSawant06/Medical-Assistant.git
+cd Medical-Assistant
+2. Backend Setup
+cd server
 
-# Create virtual env
-$ uv venv
-$ .venv/bin/activate  # Windows: venv\Scripts\activate
+# Create Virtual Environment
+python -m venv venv
 
-# Install dependencies
-$ uv pip install -r requirements.txt
+# Activate Environment
 
-# Set environment variables (.env)
-GOOGLE_API_KEY=...
-GROQ_API_KEY=...
-PINECONE_API_KEY=...
+# Windows
+venv\Scripts\activate
 
-# Run the server
-$ uvicorn main:app --reload --port 8000
+# Linux/Mac
+source venv/bin/activate
 
+# Install Dependencies
+pip install -r requirements.txt
+Create .env file
+GOOGLE_API_KEY=your_google_api_key
 
-$ cd medicalAssistant/client
+GROQ_API_KEY=your_groq_api_key
 
-# Create virtual env
-$ uv venv
-$ .venv/bin/activate  # Windows: venv\Scripts\activate
+PINECONE_API_KEY=your_pinecone_api_key
+Run FastAPI Server
+uvicorn main:app --reload --port 8000
 
-# Install dependencies
-$ uv pip install -r requirements.txt
+Backend URL:
 
-# Run the server
-$ streamlit run app.py
-🌐 Deployment
-Hosted on Render
+http://localhost:8000
+3. Frontend Setup
+cd client
 
-Configure start command as:
+# Create Virtual Environment
+python -m venv venv
 
+# Activate Environment
+
+# Windows
+venv\Scripts\activate
+
+# Linux/Mac
+source venv/bin/activate
+
+# Install Dependencies
+pip install -r requirements.txt
+Run Streamlit Application
+streamlit run app.py
+
+Frontend URL:
+
+http://localhost:8501
+📸 Application Workflow
+Step 1
+
+Upload medical documents (PDFs)
+
+Step 2
+
+Text is extracted and split into chunks
+
+Step 3
+
+Embeddings are generated using Google Generative AI
+
+Step 4
+
+Vectors are stored in Pinecone
+
+Step 5
+
+User asks a medical question
+
+Step 6
+
+Relevant chunks are retrieved
+
+Step 7
+
+Groq LLaMA 3 generates a context-aware response
+
+☁️ Deployment
+
+The application is deployed on Render.
+
+Start Command
 uvicorn main:app --host 0.0.0.0 --port 10000
